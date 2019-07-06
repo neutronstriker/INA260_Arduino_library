@@ -2,7 +2,7 @@
 i2c.h - Header file for standard i2c functions for AVR Arduino Library.
 Version: 1.2.0
 Date: 31-May-2015
-(c) 2019 N.Srinivas (a.k.a. neutronstriker / www.xmechatronics.com)
+(c) 2015 N.Srinivas (a.k.a. neutronstriker / www.xmechatronics.com)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the version 3 GNU General Public License as
