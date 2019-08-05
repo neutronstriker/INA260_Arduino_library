@@ -51,6 +51,9 @@ bool INA260::configure(INA260_averages_t avg, INA260_busConvTime_t busConvTime, 
 
     writeRegister16(INA260_REG_CONFIG, config);
 
+	cal_shuntCurrent_offset = 0;
+	cal_vBus_offset = 0;
+
     return true;
 }
 
@@ -81,6 +84,13 @@ float INA260::getMaxPower(void)
     return (getMaxCurrent() * vBusMax);
 }
 
+
+void INA260::calibrate(float shuntCurrent_offset, float vBus_offset)
+{
+	cal_shuntCurrent_offset = shuntCurrent_offset;
+	cal_vBus_offset = vBus_offset;
+}
+
 float INA260::readBusPower(void)
 {
     return (readRegister16(INA260_REG_POWER) * powerLSB);
@@ -88,13 +98,13 @@ float INA260::readBusPower(void)
 
 float INA260::readShuntCurrent(void)
 {
-    return (readRegister16(INA260_REG_CURRENT) * currentLSB);
+    return (readRegister16(INA260_REG_CURRENT) * currentLSB) + cal_shuntCurrent_offset;
 }
 
 
 float INA260::readBusVoltage(void)
 {
-    return (readRegister16(INA260_REG_BUSVOLTAGE) * vBusLSB);   
+    return (readRegister16(INA260_REG_BUSVOLTAGE) * vBusLSB) + cal_vBus_offset;   
 }
 
 INA260_averages_t INA260::getAverages(void)
@@ -182,13 +192,13 @@ void INA260::enableConversionReadyAlert(void)
 
 void INA260::setBusVoltageLimit(float voltage)
 {
-    uint16_t value = voltage / vBusLSB;
+    uint16_t value = (voltage - cal_vBus_offset) / vBusLSB;
     writeRegister16(INA260_REG_ALERTLIMIT, value);
 }
 
-void INA260::setCurrentLimit(float voltage)
+void INA260::setCurrentLimit(float current)
 {
-	uint16_t value = voltage / currentLSB;
+	uint16_t value = (current - cal_shuntCurrent_offset) / currentLSB;
     writeRegister16(INA260_REG_ALERTLIMIT, value);
 }
 

@@ -133,14 +133,17 @@ class INA260
 	float getMaxPossibleCurrent(void);
 	float getMaxCurrent(void);
 	float getMaxPower(void);
+	
+	void calibrate(float cal_shuntCurrent_offset, float cal_vBus_offset);
 
 
 	void setMaskEnable(uint16_t mask);
-    private:
-
+    
+	private:
 	int8_t inaAddress;
 	float currentLSB, powerLSB, vBusLSB;
 	float currentMax, vBusMax;
+	float cal_shuntCurrent_offset, cal_vBus_offset;
 
 	
 	uint16_t getMaskEnable(void);
